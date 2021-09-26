@@ -14,6 +14,10 @@ class Listing(models.Model):
     category = models.CharField(max_length=30)
     created = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    current_bid = models.DecimalField(max_digits=10, decimal_places=2)
     modified = models.DateTimeField(auto_now=True)
+    
+class Bid(models.Model):
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    bid_amount = models.DecimalField(max_digits=6, decimal_places=2)
+    bid_time = models.DateTimeField(auto_now_add=True)
     
