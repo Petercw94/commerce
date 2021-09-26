@@ -4,10 +4,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 
 
 from .forms import NewListingForm
-from .models import User, Listing
+from .models import User, Listing, Bid
 
 
 
@@ -111,4 +112,16 @@ def newListing(request):
 
 def listing(request, id):
     listing = Listing.objects.get(pk=id)
-    return render(request, 'auctions/listing.html', {"listing":listing})
+    try:
+        current_bid = Bid.objects.filter(listing=listing.id).latest('bid_time')
+        bid_count = "*create the bid counter"
+    except ObjectDoesNotExist:
+        current_bid = False
+        bid_count = 0
+    context = {
+        "listing":listing,
+        "bid": current_bid,
+        "bid_count": bid_count
+    }
+
+    return render(request, 'auctions/listing.html', context)

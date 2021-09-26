@@ -1,6 +1,36 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-<h1>Insert listing details for: {{ listing.title }}</h1>
-{{ listing.image }}
+<div>
+    <h2>Listing: {{ listing.title }}</h2>
+</div>
+<div>
+    <h3>Insert image here</h3>
+    <p>{{ listing.description }}</p>
+</div>
+<div>
+    {% if listing.current_bid %}
+        ${{ listing.current_bid }}
+    {% else %}
+        ${{ listing.starting_bid }}
+    {% endif %}
+</div>
+<div>
+    {% if bid_count > 1 %}
+        There are currently {{ bid_count }} bids.
+    {% elif bid_count == 1 %}
+        There is currently only 1 bid.
+    {% else %}
+        Be the first to bid on this item!
+    {% endif %}
+</div>
+<div>
+    <form action="{% url 'listing' listing.id %}", method="post">
+        {% csrf_token %}
+
+        <input type="submit" title="Place Bid">
+    </form>
+</div>
+
+
 {% endblock %}
